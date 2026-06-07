@@ -256,6 +256,7 @@ This step provides insights beyond aggregate performance metrics.
 │   ├── figures/
 │   ├── models/
 │   ├── tables/
+│   ├── reports/    
 │
 └── dataset/
 ```
@@ -301,8 +302,9 @@ Results will be saved under:
 ```text
 outputs/
 ├── figures/
-├── tables/
 ├── models/
+├── tables/
+├── reports/
 ```
 
 ---
@@ -319,7 +321,11 @@ outputs/
 * OpenCV
 
 ---
-Note: Trained model files are not included in the repository due to GitHub file size limitations. The notebook can be executed to reproduce all models and outputs.
+
+## Note
+
+Trained model weights are not included in this repository due to GitHub file size limitations. All models, figures, tables, and evaluation results can be reproduced by executing the provided notebook.
+
 ---
 
 ## Author
