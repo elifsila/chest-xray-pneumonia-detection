@@ -319,6 +319,8 @@ outputs/
 * OpenCV
 
 ---
+Note: Trained model files are not included in the repository due to GitHub file size limitations. The notebook can be executed to reproduce all models and outputs.
+---
 
 ## Author
 
