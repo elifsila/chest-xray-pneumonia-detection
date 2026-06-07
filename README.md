@@ -256,9 +256,53 @@ This step provides insights beyond aggregate performance metrics.
 │   ├── figures/
 │   ├── models/
 │   ├── tables/
-│   └── reports/
 │
 └── dataset/
+```
+---
+
+## How to Run
+
+### 1. Clone Repository
+
+```bash
+git clone https://github.com/elifsila/chest-xray-pneumonia-detection.git
+cd chest-xray-pneumonia-detection
+```
+
+### 2. Download Dataset
+
+Download the dataset from:
+
+https://www.kaggle.com/datasets/paultimothymooney/chest-xray-pneumonia/data
+
+Place the dataset in the appropriate input directory or use Kaggle Notebook.
+
+### 3. Install Dependencies
+
+```bash
+pip install tensorflow numpy pandas matplotlib seaborn scikit-learn opencv-python pillow
+```
+
+### 4. Run Notebook
+
+Open:
+
+```text
+chest_xray_pneumonia_detection_final_optimized.ipynb
+```
+
+and execute all cells sequentially.
+
+### 5. Generated Outputs
+
+Results will be saved under:
+
+```text
+outputs/
+├── figures/
+├── tables/
+├── models/
 ```
 
 ---
