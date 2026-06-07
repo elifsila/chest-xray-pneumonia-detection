@@ -248,8 +248,8 @@ This step provides insights beyond aggregate performance metrics.
 
 ```text
 .
-├── chest_xray_pneumonia_detection_final_optimized.ipynb
 ├── README.md
+├── chest-xray-pneumonia-detection.ipynb
 ├── workflow_pneumonia_detection.png
 │
 ├── outputs/
@@ -290,7 +290,7 @@ pip install tensorflow numpy pandas matplotlib seaborn scikit-learn opencv-pytho
 Open:
 
 ```text
-chest_xray_pneumonia_detection_final_optimized.ipynb
+chest-xray-pneumonia-detection.ipynb
 ```
 
 and execute all cells sequentially.
