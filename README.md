@@ -4,7 +4,7 @@
 
 This project develops and evaluates deep learning models for automated pneumonia detection from chest X-ray images. A custom Convolutional Neural Network (CNN) is compared against two transfer learning architectures, EfficientNetB0 and ResNet50, using a publicly available medical imaging dataset.
 
-Beyond standard classification performance, the project investigates model interpretability through Grad-CAM visualizations, threshold-based decision analysis, and detailed error analysis to better understand clinically relevant prediction behavior.
+Beyond standard classification performance, the project investigates model interpretability through Grad-CAM visualizations and detailed error analysis to better understand clinically relevant prediction behavior.
 
 ---
 
@@ -13,13 +13,13 @@ Beyond standard classification performance, the project investigates model inter
 * Custom CNN baseline architecture
 * Transfer Learning with EfficientNetB0 and ResNet50
 * Stratified train-validation splitting
-* Conservative medical-image augmentation
+* Medical image augmentation
 * Class imbalance handling through class weighting
-* ROC-AUC and Precision-Recall evaluation
-* Threshold analysis for FP/FN trade-offs
+* Multi-metric model evaluation
 * Grad-CAM explainability
 * Misclassification and error analysis
 * Model comparison and reporting
+* Automated export of figures, models, and evaluation outputs
 
 ---
 
@@ -33,38 +33,38 @@ https://www.kaggle.com/datasets/paultimothymooney/chest-xray-pneumonia/data
 
 ### Original Dataset Distribution
 
-| Split      |    Normal | Pneumonia |     Total |
-| ---------- | --------: | --------: | --------: |
-| Train      |     1,341 |     3,875 |     5,216 |
-| Validation |         8 |         8 |        16 |
-| Test       |       234 |       390 |       624 |
+| Split      | Normal | Pneumonia | Total |
+|------------|--------:|----------:|-------:|
+| Train      | 1,341 | 3,875 | 5,216 |
+| Validation | 8 | 8 | 16 |
+| Test       | 234 | 390 | 624 |
 | **Total**  | **1,583** | **4,273** | **5,856** |
 
 The original validation set contains only 16 images, making it unsuitable for reliable model selection, early stopping, and learning-rate scheduling.
 
 Therefore, a **stratified 80/20 split** of the original training set is used to create a statistically meaningful validation subset while keeping the original test set untouched for final evaluation.
 
-Resulting dataset sizes:
+### Working Dataset
 
-| Subset     | Images |
-| ---------- | -----: |
-| Train      |  4,173 |
-| Validation |  1,043 |
-| Test       |    624 |
+| Subset | Images |
+|---------|--------:|
+| Train | 4,173 |
+| Validation | 1,043 |
+| Test | 624 |
 
 ---
 
-## Research Objectives
+## Research Questions
 
-This project investigates the following questions:
-
-1. How effectively can a custom CNN classify pneumonia from chest X-ray images?
-2. Do transfer learning models outperform a custom CNN?
-3. Can class weighting reduce the impact of class imbalance?
-4. How does threshold selection affect false positive and false negative rates?
-5. What insights can Grad-CAM provide regarding model decision-making?
-6. Does conservative data augmentation improve generalization?
-7. What patterns are present in misclassified chest X-rays?
+| Number | Question |
+|---|----------|
+| RQ1 | How effectively can a custom CNN classify pneumonia from chest X-ray images? |
+| RQ2 | To what extent do transfer learning models outperform a custom CNN across accuracy, recall, F1-score, and AUC-ROC? |
+| RQ3 | Can class weighting mitigate the impact of class imbalance on false negative predictions? |
+| RQ4 | How do evaluation metrics affect pneumonia classification assessment? |
+| RQ5 | What insights can Grad-CAM provide about model decision-making? |
+| RQ6 | Does data augmentation improve model generalization? |
+| RQ7 | What patterns appear in misclassified chest X-ray images? |
 
 ---
 
@@ -81,14 +81,13 @@ The workflow includes:
 1. Dataset preparation
 2. Data exploration
 3. Image preprocessing
-4. Conservative medical augmentation
+4. Data augmentation
 5. Model development
 6. Model training
-7. Evaluation
-8. Threshold analysis
-9. Grad-CAM explainability
-10. Error analysis
-11. Final model comparison and reporting
+7. Model evaluation
+8. Grad-CAM explainability
+9. Error analysis
+10. Final model comparison and reporting
 
 ---
 
@@ -102,32 +101,28 @@ All chest X-ray images are:
 
 Model-specific preprocessing is applied:
 
-| Model          | Preprocessing                 |
-| -------------- | ----------------------------- |
-| Custom CNN     | Pixel normalization [0,1]     |
+| Model | Preprocessing |
+|--------|--------------|
+| Custom CNN | Pixel normalization [0,1] |
 | EfficientNetB0 | EfficientNet preprocess_input |
-| ResNet50       | ResNet preprocess_input       |
+| ResNet50 | ResNet preprocess_input |
 
 ---
 
 ## Data Augmentation
 
-A conservative augmentation strategy is applied only to the training set to preserve clinically meaningful radiographic structures.
+Data augmentation is applied only to the training set to improve generalization and reduce overfitting.
 
 ### Applied Augmentations
 
-* Rotation (±8°)
-* Width Shift (±5%)
-* Height Shift (±5%)
-* Zoom (±8%)
+* Rotation (±15°)
+* Width Shift (±10%)
+* Height Shift (±10%)
+* Zoom (±10%)
+* Shear (±10%)
+* Horizontal Flip
 
-### Excluded Augmentations
-
-* Brightness augmentation
-* Horizontal flipping
-* Shear transformations
-
-These operations were intentionally avoided because they may alter diagnostically important features in chest radiographs.
+Brightness augmentation was excluded after experimentation because it occasionally produced unrealistic intensity variations in chest X-ray images.
 
 ---
 
@@ -143,6 +138,7 @@ Architecture components:
 * Batch Normalization
 * Max Pooling
 * Global Average Pooling
+* Dropout Regularization
 * Dense Layers
 * Sigmoid Output
 
@@ -152,9 +148,9 @@ ImageNet-pretrained EfficientNetB0 using transfer learning.
 
 Training strategy:
 
-* Feature extraction
-* Controlled fine-tuning
-* Reduced learning-rate scheduling
+* Feature Extraction
+* Fine-Tuning
+* Learning Rate Scheduling
 
 ### 3. ResNet50
 
@@ -162,9 +158,9 @@ ImageNet-pretrained ResNet50 used as a deeper transfer-learning baseline.
 
 Training strategy:
 
-* Frozen backbone training
-* Conservative fine-tuning
-* Additional regularization to reduce overfitting
+* Feature Extraction
+* Fine-Tuning
+* Additional Regularization
 
 ---
 
@@ -179,15 +175,15 @@ The following techniques are used across models:
 * ReduceLROnPlateau
 * Model Checkpointing
 
-Transfer learning models are trained in two stages:
+Transfer learning models are trained in two stages.
 
 ### Stage 1 – Feature Extraction
 
-Pretrained backbone remains frozen while the classification head is trained.
+The pretrained backbone remains frozen while the classification head is trained.
 
 ### Stage 2 – Fine-Tuning
 
-Selected upper layers are unfrozen and optimized using a smaller learning rate.
+The last 10 layers of the pretrained backbone are unfrozen and optimized using a reduced learning rate.
 
 ---
 
@@ -199,10 +195,9 @@ Models are evaluated using:
 * Precision
 * Recall (Sensitivity)
 * F1-Score
-* ROC-AUC
-* Average Precision (AP)
+* AUC-ROC
 * Confusion Matrix
-* Precision-Recall Curve
+* Classification Report
 
 Particular attention is given to:
 
@@ -214,33 +209,18 @@ Since missing pneumonia cases is generally more critical than generating additio
 
 ---
 
-## Threshold Analysis
-
-In addition to conventional evaluation, probability-threshold analysis is performed to investigate the trade-off between:
-
-* False Positives (FP)
-* False Negatives (FN)
-* Precision
-* Recall
-
-This provides additional insight into how decision thresholds influence model behavior in a medical context.
-
----
-
 ## Explainability (Grad-CAM)
 
-Grad-CAM visualizations are generated for:
-
-* Custom CNN
-* EfficientNetB0
-* ResNet50
+Grad-CAM visualizations are generated to investigate which image regions contribute most strongly to model predictions.
 
 The explainability analysis is used to:
 
 * Identify influential image regions
 * Assess model attention patterns
 * Verify clinically meaningful focus areas
-* Compare interpretability across architectures
+* Improve model interpretability
+
+Grad-CAM results are used as a qualitative complement to quantitative evaluation metrics.
 
 ---
 
