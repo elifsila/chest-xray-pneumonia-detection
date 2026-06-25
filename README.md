@@ -16,7 +16,7 @@ Beyond standard classification performance, the project investigates model inter
 * Medical image augmentation
 * Class imbalance handling through class weighting
 * Multi-metric model evaluation
-* Grad-CAM explainability
+* Grad-CAM explainability with iterative optimization
 * Misclassification and error analysis
 * Model comparison and reporting
 * Automated export of figures, models, and evaluation outputs
@@ -73,21 +73,20 @@ Therefore, a **stratified 80/20 split** of the original training set is used to 
 The complete project workflow is illustrated below.
 
 <p align="center">
-  <img src="workflow_pneumonia_detection.png" width="100%">
+  <img src="final_workflow_pneumonia_detection.png" width="100%">
 </p>
 
 The workflow includes:
 
-1. Dataset preparation
-2. Data exploration
-3. Image preprocessing
-4. Data augmentation
-5. Model development
-6. Model training
-7. Model evaluation
-8. Grad-CAM explainability
-9. Error analysis
-10. Final model comparison and reporting
+1. Dataset preparation and exploratory data analysis
+2. Image preprocessing
+3. Data augmentation
+4. CNN model development (Custom CNN)
+5. Transfer learning (EfficientNetB0 and ResNet50)
+6. Model evaluation
+7. Grad-CAM explainability
+8. Error analysis
+9. Final model comparison
 
 ---
 
@@ -220,6 +219,12 @@ The explainability analysis is used to:
 * Verify clinically meaningful focus areas
 * Improve model interpretability
 
+### Grad-CAM Optimization Process
+
+Achieving meaningful Grad-CAM results required extensive experimentation across multiple approaches. Various configurations were tested including different target layer selections, preprocessing pipelines, colormap settings, alpha blending ratios, and image normalization strategies.
+
+Due to this iterative optimization process, the `outputs/` folder and the notebook were re-added to the repository in their updated form. The version currently in the repository represents the most optimized Grad-CAM implementation achieved through this process.
+
 Grad-CAM results are used as a qualitative complement to quantitative evaluation metrics.
 
 ---
@@ -250,16 +255,20 @@ This step provides insights beyond aggregate performance metrics.
 .
 ├── README.md
 ├── chest-xray-pneumonia-detection.ipynb
+├── final_workflow_pneumonia_detection.png
 ├── workflow_pneumonia_detection.png
 │
 ├── outputs/
 │   ├── figures/
 │   ├── models/
+│   │   ├── model_architectures.pdf
+│   │   └── README.md        ← Drive download link for .keras files
 │   ├── tables/
-│   ├── reports/    
+│   └── reports/
 │
 └── dataset/
 ```
+
 ---
 
 ## How to Run
@@ -304,7 +313,7 @@ outputs/
 ├── figures/
 ├── models/
 ├── tables/
-├── reports/
+└── reports/
 ```
 
 ---
@@ -324,7 +333,9 @@ outputs/
 
 ## Note
 
-Trained model weights are not included in this repository due to GitHub file size limitations. All models, figures, tables, and evaluation results can be reproduced by executing the provided notebook.
+Trained model weights are not included in this repository due to GitHub file size limitations. Model weights can be downloaded from the link provided in `outputs/models/README.md`.
+
+All models, figures, tables, and evaluation results can be reproduced by executing the provided notebook.
 
 ---
 
