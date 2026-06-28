@@ -257,6 +257,7 @@ This step provides insights beyond aggregate performance metrics.
 ├── chest-xray-pneumonia-detection.ipynb
 ├── final_workflow_pneumonia_detection.png
 ├── workflow_pneumonia_detection.png
+├── Chest-XRay-Pneumonia-Detection_Presentation.pdf
 │
 ├── outputs/
 │   ├── figures/
